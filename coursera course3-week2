@@ -1,4 +1,4 @@
-Queze-question1
+Quiz-Question1
 Access the API to get information on your instructors repositories (hint: this is the url you want "https://api.github.com/users/jtleek/repos"). Use this data to find the time that the datasharing repo was created. What time was it created?
 
 > library(jsonlite)
