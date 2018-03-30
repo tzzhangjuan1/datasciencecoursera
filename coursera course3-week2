@@ -1,0 +1,29 @@
+Queze-question1
+Access the API to get information on your instructors repositories (hint: this is the url you want "https://api.github.com/users/jtleek/repos"). Use this data to find the time that the datasharing repo was created. What time was it created?
+
+> library(jsonlite)
+> jasondf<-fromJSON("https://api.github.com/users/jtleek/repos")                      # build json into dataframe
+> head(jasondf)                                                                       #  check the dataframe
+> names<-jasondf$name                                                       
+> names                                                              # check the list (row) of the name (colume) in the dataframe
+ [1] "advdatasci"              "advdatasci-project"      "advdatasci-swirl"       
+ [4] "advdatasci15"            "advdatasci16"            "advdatasci_swirl"       
+ [7] "ballgown"                "bookdown-start"          "capitalIn21stCenturyinR"
+[10] "careerplanning"          "cshlcg-labs"             "dataanalysis"           
+[13] "datascientist"           "datasharing"             "datawomenontwitter"     
+[16] "day1"                    "derfinder"               "derfinder-1"            
+[19] "DSM"                     "EDA-Project"             "firstpaper"             
+[22] "futureofstats"           "genomicspapers"          "genstats"               
+[25] "genstats_site"           "googleCite"              "graduate"               
+[28] "healthvis"               "hyde"                    "inclassfeb62014" 
+                                                                                      # "datasharing" is row [14]
+
+> library(httr)
+> APIget=GET("https://api.github.com/users/jtleek/repos")
+> output <- content(APIget)                                               # extract json data into structured R objects
+> list(output[[14]]$name, output[[14]]$created_at)                     # subset data at row [14], colume $name and $created_at
+[[1]]
+[1] "datasharing"
+
+[[2]]
+[1] "2013-11-07T13:25:07Z"
