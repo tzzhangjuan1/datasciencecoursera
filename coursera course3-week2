@@ -3,9 +3,12 @@ Access the API to get information on your instructors repositories (hint: this i
 
 > library(jsonlite)
 > jasondf<-fromJSON("https://api.github.com/users/jtleek/repos")                      # build json into dataframe
-> head(jasondf)                                                                       #  check the dataframe
-> names<-jasondf$name                                                       
-> names                                                              # check the list (row) of the name (colume) in the dataframe
+> dim(jasondf)                                                                        # check the dim of dataframe (30 rows, 71 columes)
+[1] 30 71
+
+> head(jasondf)                                                                       #  check the columes of dataframe
+
+> jasondf$name                                                                        # check the list (row) of the name (colume) in the dataframe
  [1] "advdatasci"              "advdatasci-project"      "advdatasci-swirl"       
  [4] "advdatasci15"            "advdatasci16"            "advdatasci_swirl"       
  [7] "ballgown"                "bookdown-start"          "capitalIn21stCenturyinR"
@@ -21,7 +24,7 @@ Access the API to get information on your instructors repositories (hint: this i
 > library(httr)
 > APIget=GET("https://api.github.com/users/jtleek/repos")
 > output <- content(APIget)                                               # extract json data into structured R objects
-> list(output[[14]]$name, output[[14]]$created_at)                     # subset data at row [14], colume $name and $created_at
+> list(output[[14]]$name, output[[14]]$created_at)                        # subset data at row [14], colume $name and $created
 [[1]]
 [1] "datasharing"
 
