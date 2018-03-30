@@ -30,3 +30,10 @@ Access the API to get information on your instructors repositories (hint: this i
 
 [[2]]
 [1] "2013-11-07T13:25:07Z"
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+Quiz-Question4
+> url="http://biostat.jhsph.edu/~jleek/contact.html"
+> lines <- readLines(url)
+> c(nchar(lines[10]), nchar(lines[20]), nchar(lines[30]), nchar(lines[100]))
+[1] 45 31  7 25
