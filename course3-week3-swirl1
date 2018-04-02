@@ -94,5 +94,84 @@
  9  1402 2014-07-08 00:41:41  41261 3.1.0     i386   mingw32      swirl   2.2.9   US        234
 10  1424 2014-07-08 00:44:49 106393 3.1.0     x86_64 linux-gnu    swirl   2.2.9   US        301
 # ... with 810 more rows
+> filter(cran, r_version == "3.1.1", country == "US")
+> filter(cran, r_version <= "3.0.2", country == "IN")
+> filter(cran, country == "US" | country == "IN")         # "|" means "or"
+> filter(cran, size > 100500, r_os=="linux-gnu")          # size is numeric, do not need " "
+> filter(cran, !is.na(r_version))                         # observations in r_version is NOT "NA"
+
+> cran2<-select(cran, size:ip_id)                         # cran2, subset of cran, all columns from size through ip_id 
+> arrange(cran2, ip_id)                                   # to order the ROWS of cran2, ip_id is in ascending order
+# A tibble: 225,468 x 8
+     size r_version r_arch r_os         package     version country ip_id
+    <int> <chr>     <chr>  <chr>        <chr>       <chr>   <chr>   <int>
+ 1  80589 3.1.0     x86_64 mingw32      htmltools   0.2.4   US          1
+ 2 180562 3.0.2     x86_64 mingw32      yaml        2.1.13  US          1
+ 3 190120 3.1.0     i386   mingw32      babel       0.2-6   US          1
+ 4 321767 3.1.0     x86_64 mingw32      tseries     0.10-32 US          2
+ 5  52281 3.0.3     x86_64 darwin10.8.0 quadprog    1.5-5   US          2
+ 6 876702 3.1.0     x86_64 linux-gnu    zoo         1.7-11  US          2
+ 7 321764 3.0.2     x86_64 linux-gnu    tseries     0.10-32 US          2
+ 8 876702 3.1.0     x86_64 linux-gnu    zoo         1.7-11  US          2
+ 9 321768 3.1.0     x86_64 mingw32      tseries     0.10-32 US          2
+10 784093 3.1.0     x86_64 linux-gnu    strucchange 1.5-0   US          2
+# ... with 225,458 more rows
+> arrange(cran2, desc(ip_id))                               # to order the ROWS of cran2, ip_id is in descending order
+> arrange(cran2, package, ip_id)                            # first arrange by package names (ascending alphabetically), then by ip_id
+> arrange(cran2, country, desc(r_version),ip_id) 
+
+> cran3 <- select(cran, ip_id, package, size)
+> cran3 
+# A tibble: 225,468 x 3
+   ip_id package         size
+   <int> <chr>          <int>
+ 1     1 htmltools      80589
+ 2     2 tseries       321767
+ 3     3 party         748063
+ 4     3 Hmisc         606104
+ 5     4 digest         79825
+ 6     3 randomForest   77681
+ 7     3 plyr          393754
+ 8     5 whisker        28216
+ 9     6 Rcpp            5928
+10     7 hflights     2206029
+# ... with 225,458 more rows
+> mutate(cran3, size_mb = size / 2^20)            # mutate() function is to create a new variable based on the value of one or more                                                          variables already in a dataset   
+# A tibble: 225,468 x 4
+   ip_id package         size size_mb
+   <int> <chr>          <int>   <dbl>
+ 1     1 htmltools      80589 0.0769 
+ 2     2 tseries       321767 0.307  
+ 3     3 party         748063 0.713  
+ 4     3 Hmisc         606104 0.578  
+ 5     4 digest         79825 0.0761 
+ 6     3 randomForest   77681 0.0741 
+ 7     3 plyr          393754 0.376  
+ 8     5 whisker        28216 0.0269 
+ 9     6 Rcpp            5928 0.00565
+10     7 hflights     2206029 2.10   
+# ... with 225,458 more rows
+> mutate(cran3, size_mb = size / 2^20, size_gb = size_mb / 2^10)
+> mutate(cran3, correct_size = size + 1000)
+# A tibble: 225,468 x 4
+   ip_id package         size correct_size
+   <int> <chr>          <int>        <dbl>
+ 1     1 htmltools      80589        81589
+ 2     2 tseries       321767       322767
+ 3     3 party         748063       749063
+ 4     3 Hmisc         606104       607104
+ 5     4 digest         79825        80825
+ 6     3 randomForest   77681        78681
+ 7     3 plyr          393754       394754
+ 8     5 whisker        28216        29216
+ 9     6 Rcpp            5928         6928
+10     7 hflights     2206029      2207029
+
+> summarize(cran, avg_bytes = mean(size))                        # summarize() function collapses the dataset to a single row
+# A tibble: 1 x 1
+  avg_bytes
+      <dbl>
+1    844086
+
 
 
