@@ -134,4 +134,8 @@ result3 <-                                                      # result3 is sam
   arrange(desc(countries), avg_bytes)
   > print(result3)
                       
-                      
+ >   cran %>%
+       select(ip_id,country,package,size) %>%
+	       print
+              
+ 
