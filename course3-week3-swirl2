@@ -1,0 +1,137 @@
+> library(dplyr)
+> cran<-tbl_df(mydf)
+> rm("mydf")
+> cran
+# A tibble: 225,468 x 11
+       X date   time      size r_ver… r_ar… r_os  pack… vers… coun…
+   <int> <chr>  <chr>    <int> <chr>  <chr> <chr> <chr> <chr> <chr>
+ 1     1 2014-… 00:54…   80589 3.1.0  x86_… ming… html… 0.2.4 US   
+ 2     2 2014-… 00:59…  321767 3.1.0  x86_… ming… tser… 0.10… US   
+ 3     3 2014-… 00:47…  748063 3.1.0  x86_… linu… party 1.0-… US   
+ 4     4 2014-… 00:48…  606104 3.1.0  x86_… linu… Hmisc 3.14… US   
+ 5     5 2014-… 00:46…   79825 3.0.2  x86_… linu… dige… 0.6.4 CA   
+ 6     6 2014-… 00:48…   77681 3.1.0  x86_… linu… rand… 4.6-7 US   
+ 7     7 2014-… 00:48…  393754 3.1.0  x86_… linu… plyr  1.8.1 US   
+ 8     8 2014-… 00:47…   28216 3.0.2  x86_… linu… whis… 0.3-2 US   
+ 9     9 2014-… 00:54…    5928 NA     NA    NA    Rcpp  0.10… CN   
+10    10 2014-… 00:15… 2206029 3.0.2  x86_… linu… hfli… 0.1   US   
+# ... with 225,458 more rows, and 1 more variable: ip_id <int>
+
+> by_package<-group_by(cran,package)                          # Group cran by the package variable and store the result in a new object                                                                    called by_package.
+> by_package
+# A tibble: 225,468 x 11
+# Groups: package [6,023]
+       X date   time      size r_ver… r_ar… r_os  pack… vers… coun…
+   <int> <chr>  <chr>    <int> <chr>  <chr> <chr> <chr> <chr> <chr>
+ 1     1 2014-… 00:54…   80589 3.1.0  x86_… ming… html… 0.2.4 US   
+ 2     2 2014-… 00:59…  321767 3.1.0  x86_… ming… tser… 0.10… US   
+ 3     3 2014-… 00:47…  748063 3.1.0  x86_… linu… party 1.0-… US   
+ 4     4 2014-… 00:48…  606104 3.1.0  x86_… linu… Hmisc 3.14… US   
+ 5     5 2014-… 00:46…   79825 3.0.2  x86_… linu… dige… 0.6.4 CA   
+ 6     6 2014-… 00:48…   77681 3.1.0  x86_… linu… rand… 4.6-7 US   
+ 7     7 2014-… 00:48…  393754 3.1.0  x86_… linu… plyr  1.8.1 US   
+ 8     8 2014-… 00:47…   28216 3.0.2  x86_… linu… whis… 0.3-2 US   
+ 9     9 2014-… 00:54…    5928 NA     NA    NA    Rcpp  0.10… CN   
+10    10 2014-… 00:15… 2206029 3.0.2  x86_… linu… hfli… 0.1   US   
+# ... with 225,458 more rows, and 1 more variable: ip_id <int>
+> summarize(by_package, mean(size))                            # use summarize() to apply mean(size) to the grouped data in by_package.
+# A tibble: 6,023 x 2
+   package     `mean(size)`
+   <chr>              <dbl>
+ 1 A3                 62195
+ 2 abc              4826665
+ 3 abcdeFBA          455980
+ 4 ABCExtremes        22904
+ 5 ABCoptim           17807
+ 6 ABCp2              30473
+ 7 abctools         2589394
+ 8 abd               453631
+ 9 abf2               35693
+10 abind              32939
+# ... with 6,013 more rows
+
+> pack_sum <- summarize(by_package,
+                      count =n(),                             # n(), contains the total number of rows (i.e. downloads) for each package.
+                      unique = n_distinct(ip_id),             # n_distinct(ip_id), gives the total number of unique downloads for each package, as measured by the number of distinct ip_id's.
+                      countries = n_distinct(country),        # n_distinct(country), provides the number of countries in which each package was downloaded.
+                      avg_bytes = mean(size))                 # the mean download size (in bytes) for each package
+> pack_sum
+# A tibble: 6,023 x 5
+   package     count unique countries avg_bytes
+   <chr>       <int>  <int>     <int>     <dbl>
+ 1 A3             25     24        10     62195
+ 2 abc            29     25        16   4826665
+ 3 abcdeFBA       15     15         9    455980
+ 4 ABCExtremes    18     17         9     22904
+ 5 ABCoptim       16     15         9     17807
+ 6 ABCp2          18     17        10     30473
+ 7 abctools       19     19        11   2589394
+ 8 abd            17     16        10    453631
+ 9 abf2           13     13         9     35693
+10 abind         396    365        50     32939
+# ... with 6,013 more rows
+
+                       
+> quantile(pack_sum$count, probs = 0.99)                    # the value of 'count' that splits the data into the top 1% and bottom 99% of packages based on total downloads --> the 0.99, or 99%, sample quantile
+   99% 
+679.56 
+> top_counts<-filter(pack_sum, count>679)                   # ilter all rows from pack_sum for which 'count' is greater (>) than 679 and store in a new object called top_counts.
+> top_counts
+# A tibble: 61 x 5
+   package    count unique countries avg_bytes
+   <chr>      <int>  <int>     <int>     <dbl>
+ 1 bitops      1549   1408        76     28715
+ 2 car         1008    837        64   1229122
+ 3 caTools      812    699        64    176589
+ 4 colorspace  1683   1433        80    357411
+ 5 data.table   680    564        59   1252721
+ 6 DBI         2599    492        48    206933
+ 7 devtools     769    560        55    212933
+ 8 dichromat   1486   1257        74    134732
+ 9 digest      2210   1894        83    120549
+10 doSNOW       740     75        24      8364
+# ... with 51 more rows
+
+> View(top_counts)                                         # View the table, work in RStudio
+> top_counts_sorted<-arrange(top_counts,desc(count))       # arrange() the rows of top_counts based on the 'count' column and sort form high to low
+
+> quantile(pack_sum$unique, probs = 0.99)
+99% 
+465 
+> top_unique<-filter(pack_sum, unique>465)
+> View(top_unique)
+> top_unique_sorted<-arrange(top_unique,desc(unique))
+> View(top_unique_sorted)
+
+> result2 <-
+    arrange(
+      filter(
+        summarize(
+          group_by(cran,
+                  package
+          ),
+          count = n(),
+          unique = n_distinct(ip_id),
+          countries = n_distinct(country),
+          avg_bytes = mean(size)
+        ),
+        countries > 60
+      ),
+      desc(countries),
+      avg_bytes
+    )
+> print(result2)
+
+result3 <-                                                      # result3 is same as result2, but a easier coding way using dplyr and %>% code
+  cran %>%
+  group_by(package) %>%
+  summarize(count = n(),
+            unique = n_distinct(ip_id),
+            countries = n_distinct(country),
+            avg_bytes = mean(size)
+  ) %>%
+  filter(countries > 60) %>%
+  arrange(desc(countries), avg_bytes)
+  > print(result3)
+                      
+                      
