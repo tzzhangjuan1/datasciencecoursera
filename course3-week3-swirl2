@@ -134,8 +134,18 @@ result3 <-                                                      # result3 is sam
   arrange(desc(countries), avg_bytes)
   > print(result3)
                       
- >   cran %>%
-       select(ip_id,country,package,size) %>%
-	       print
-              
- 
+ > cran %>%                                                   
+       select(ip_id,country,package,size) %>%                 # Chain1. select ip_id,country,package,size columns from cran, call to print() at the end
+	       print              
+> cran %>%                                                      
+  	select(ip_id,country,package,size) %>%
+  	mutate(size_mb = size / 2^20)                          # Chain2. add a column called size_mb that contains the size of each download in megabytes
+> cran %>%
+  	select(ip_id, country, package, size) %>%
+  	mutate(size_mb = size / 2^20) %>%
+  	filter(size_mb <= 0.5) %>%                              # Chain3. filter rows for which size_mb is less than or equal to (<=) 0.5
+> cran %>%
+  	select(ip_id, country, package, size) %>%
+  	mutate(size_mb = size / 2^20) %>%
+  	filter(size_mb <= 0.5) %>%
+        arrange(desc(size_mb))                                  # Chain4. 
