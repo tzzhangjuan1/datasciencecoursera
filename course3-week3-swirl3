@@ -219,8 +219,39 @@ res <- gather(students2, sex_class, count, -grade)      # using gather() to stac
 10 Karen     3     C failed
 
 
-
+> sat
+# A tibble: 6 x 10
+  score_range read_male read_fem read_total math_male math_fem math_total write_… write_… write…
+  <chr>           <int>    <int>      <int>     <int>    <int>      <int>   <int>   <int>  <int>
+1 700-800         40151    38898      79049     74461    46040     120501   31574   39101  70675
+2 600-690        121950   126084     248034    162564   133954     296518  100963  125368 226331
+3 500-590        227141   259553     486694    233141   257678     490819  202326  247239 449565
+4 400-490        242554   296793     539347    204670   288696     493366  262623  302933 565556
+5 300-390        113568   133473     247041     82468   131025     213493  146106  144381 290487
+6 200-290         30728    29154      59882     18788    26562      45350   32500   24933  57433
      
+> sat %>%
+    select(-contains("total")) %>%                              # select the variables that do not caontain "tatal".
+    gather(part_sex, count, -score_range) %>%
+    separate(part_sex, c("part", "sex")) %>%                    # split the "part_sex" varialbes into "part" and "sex" two columns
+    group_by(part, sex) %>%                                     # group the data by part and sex, in that order.
+    mutate(total = sum(count), prop = count / total) %>%        # add two new columns, whose values will be automatically computed group-by-group
+  print
+  # A tibble: 36 x 6
+# Groups: part, sex [6]
+   score_range part  sex    count  total   prop
+   <chr>       <chr> <chr>  <int>  <int>  <dbl>
+ 1 700-800     read  male   40151 776092 0.0517
+ 2 600-690     read  male  121950 776092 0.157 
+ 3 500-590     read  male  227141 776092 0.293 
+ 4 400-490     read  male  242554 776092 0.313 
+ 5 300-390     read  male  113568 776092 0.146 
+ 6 200-290     read  male   30728 776092 0.0396
+ 7 700-800     read  fem    38898 883955 0.0440
+ 8 600-690     read  fem   126084 883955 0.143 
+ 9 500-590     read  fem   259553 883955 0.294 
+10 400-490     read  fem   296793 883955 0.336 
+# ... with 26 more rows
 
 
 
