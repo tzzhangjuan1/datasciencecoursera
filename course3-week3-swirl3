@@ -1,7 +1,3 @@
-
-
-
-
 > libreary(readr) 
 > libreary(tidyr)
 > libreary(dplyr)
@@ -57,6 +53,90 @@ res <- gather(students2, sex_class, count, -grade)      # using gather() to stac
 19     D  female_2     1
 20     E  female_2     7
 
+> separate(res,sex_class,c("sex", "class"))              # split the sex_class column into sex and class
+   grade    sex class count
+1      A   male     1     3
+2      B   male     1     6
+3      C   male     1     7
+4      D   male     1     4
+5      E   male     1     1
+6      A female     1     4
+7      B female     1     4
+8      C female     1     4
+9      D female     1     0
+10     E female     1     1
+11     A   male     2     3
+12     B   male     2     3
+13     C   male     2     3
+14     D   male     2     8
+15     E   male     2     2
+16     A female     2     4
+17     B female     2     5
+18     C female     2     8
+19     D female     2     1
+20     E female     2     7
+
+> students2 %>%
+     gather(sex_class,count, -grade) %>%
+     separate(sex_class, c("sex", "class")) %>%              # chain the gather and split steps
+     print  
+     
+> students3
+    name    test class1 class2 class3 class4 class5
+1  Sally midterm      A   <NA>      B   <NA>   <NA>
+2  Sally   final      C   <NA>      C   <NA>   <NA>
+3   Jeff midterm   <NA>      D   <NA>      A   <NA>
+4   Jeff   final   <NA>      E   <NA>      C   <NA>
+5  Roger midterm   <NA>      C   <NA>   <NA>      B
+6  Roger   final   <NA>      A   <NA>   <NA>      A
+7  Karen midterm   <NA>   <NA>      C      A   <NA>
+8  Karen   final   <NA>   <NA>      C      A   <NA>
+9  Brian midterm      B   <NA>   <NA>   <NA>      A
+10 Brian   final      B   <NA>   <NA>   <NA>      C   
+
+> students3 %>%                                              # gather the columns class1 through class5 into a new variable called class. The 'key' should be class, and the 'value' should be grade.
+    gather(class, grade, -name, -test, na.rm = TRUE) %>%     # key-class, gather of column names; value-garde, gather of values of each columns 
+    print
+    
+     name    test  class grade
+1  Sally midterm class1     A
+2  Sally   final class1     C
+9  Brian midterm class1     B
+10 Brian   final class1     B
+13  Jeff midterm class2     D
+14  Jeff   final class2     E
+15 Roger midterm class2     C
+16 Roger   final class2     A
+21 Sally midterm class3     B
+22 Sally   final class3     C
+27 Karen midterm class3     C
+28 Karen   final class3     C
+33  Jeff midterm class4     A
+34  Jeff   final class4     C
+37 Karen midterm class4     A
+38 Karen   final class4     A
+45 Roger midterm class5     B
+46 Roger   final class5     A
+49 Brian midterm class5     A
+50 Brian   final class5     C
+    
+>- students3 %>%
+    gather(class, grade, class1:class5, na.rm = TRUE) %>%    
+    spread(test, grade) %>%                                   # split the data frame, key-test, the column to spread; value-grade, the value to split
+    print
+    
+    name  class final midterm
+1  Brian class1     B       B
+2  Brian class5     C       A
+3   Jeff class2     E       D
+4   Jeff class4     C       A
+5  Karen class3     C       C
+6  Karen class4     A       A
+7  Roger class2     A       C
+8  Roger class5     A       B
+9  Sally class1     C       A
+10 Sally class3     C       B
+     
 
 
 
