@@ -136,6 +136,90 @@ res <- gather(students2, sex_class, count, -grade)      # using gather() to stac
 8  Roger class5     A       B
 9  Sally class1     C       A
 10 Sally class3     C       B
+
+> students3 %>%
+    gather(class, grade, class1:class5, na.rm = TRUE) %>%
+    spread(test, grade) %>%
+    mutate(class=parse_number(class)) %>%                     # "overwrite" class columns to be 1, 2, ..., 5 and not class1, class2, ..., class5. use mutate() function from dplyr. 
+    print
+> parse_number("class5")                                      # parse_number() function from readr.
+[1] 5
+
+
+> students4                                                   # each id, name, and sex is repeated twice, which seems quite redundant.
+    id  name sex class midterm final
+1  168 Brian   F     1       B     B
+2  168 Brian   F     5       A     C
+3  588 Sally   M     1       A     C
+4  588 Sally   M     3       B     C
+5  710  Jeff   M     2       D     E
+6  710  Jeff   M     4       A     C
+7  731 Roger   F     2       C     A
+8  731 Roger   F     5       B     A
+9  908 Karen   M     3       C     C
+10 908 Karen   M     4       A     A
+
+> student_info <- students4 %>%           
+    select(id, name, sex) %>%  
+    unique() %>%                                              # remove duplicate rows from student_info
+    print
+    
+   id  name sex
+1 168 Brian   F
+3 588 Sally   M
+5 710  Jeff   M
+7 731 Roger   F
+9 908 Karen   M
+
+> gradebook <- students4 %>%
+    select(id, class, midterm, final)%>%
+    print
+    
+    id class midterm final
+1  168     1       B     B
+2  168     5       A     C
+3  588     1       A     C
+4  588     3       B     C
+5  710     2       D     E
+6  710     4       A     C
+7  731     2       C     A
+8  731     5       B     A
+9  908     3       C     C
+10 908     4       A     A
+
+
+
+> passed
+   name class final
+1 Brian     1     B
+2 Roger     2     A
+3 Roger     5     A
+4 Karen     4     A
+> failed
+   name class final
+1 Brian     5     C
+2 Sally     1     C
+3 Sally     3     C
+4  Jeff     2     E
+5  Jeff     4     C
+6 Karen     3     C
+> passed<-mutate(passed,status="passed")            # add a new "status" column to the passed table, the the value is "passed"
+> failed<-mutate(failed,status="failed")
+> bind_rows(passed,failed)                          # join the passed and failed tables together into a single unit.
+    name class final status
+1  Brian     1     B passed
+2  Roger     2     A passed
+3  Roger     5     A passed
+4  Karen     4     A passed
+5  Brian     5     C failed
+6  Sally     1     C failed
+7  Sally     3     C failed
+8   Jeff     2     E failed
+9   Jeff     4     C failed
+10 Karen     3     C failed
+
+
+
      
 
 
