@@ -13,6 +13,14 @@ Q1:The American Community Survey distributes downloadable data about United Stat
 > download.file(Url,destfile="./data/Idahohouse.csv",method="curl")
 > Idahohouse<-read.csv("./data/Idahohouse.csv")
 
+> wgtp<-strsplit(names(Ihouse),"wgtp")
+> wgtp123<-wgtp[123]
+> wgtp123
+    [[1]]
+    [1] ""   "15"
+
+
+
 Q2: Load the Gross Domestic Product data for the 190 ranked countries in this data set:
 
       https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv
