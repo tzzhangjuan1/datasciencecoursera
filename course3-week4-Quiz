@@ -76,3 +76,22 @@ Q4: Load the Gross Domestic Product data for the 190 ranked countries in this da
 > table(grepl("Fiscal year end: June",matchedData$"Special.Notes"))
   FALSE  TRUE 
     176    13 
+    
+    
+    
+    
+> sampleTimes[1:10]
+ [1] "2007-01-03" "2007-01-04" "2007-01-05" "2007-01-08" "2007-01-09" "2007-01-10" "2007-01-11" "2007-01-12" "2007-01-16"
+[10] "2007-01-17"
+> class(sampleTimes)
+[1] "Date"
+> year<-as.POSIXlt(sampleTimes)$year+1900
+> year[1:10]
+ [1] 2007 2007 2007 2007 2007 2007 2007 2007 2007 2007
+> length(which(year==2012))
+    [1] 250 
+> week<-wday(lubtime)
+> length(which(week==2))
+    [1] 531
+> length(which(year==2012 & week==2))
+[1] 47
